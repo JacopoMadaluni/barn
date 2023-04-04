@@ -73,5 +73,5 @@ ___/_.___/\__,_/_/  /_/ /_/
     else:
         print("Unknown command: " + args.command)
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
