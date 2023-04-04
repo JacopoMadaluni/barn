@@ -1,0 +1,11 @@
+name: $NAME
+description: $DESCRIPTION
+version: 0.1.0
+scripts:
+  - start: "python ./main.py"
+  - test: "..."
+author: $AUTHOR
+license: $LICENSE
+dependencies:
+  - python:
+      version: ">=3.9.0"
