@@ -1,18 +1,10 @@
-import subprocess
 from src.core import barn_action, Context
-import re
 
-def split_package_version(requirement):
-    pattern = r'([a-zA-Z0-9-_]+)([<>=~!]+[0-9.a-zA-Z]+)?'
-    match = re.match(pattern, requirement)
-    if match:
-        return [match.group(1), match.group(2)]
-    return [requirement, None]
 
 @barn_action
 def add(requirement, context: Context=None):
 
-    package_name, package_version = split_package_version(requirement)
+    package_name, package_version = context.split_package_version(requirement)
 
     print(f"Name: {package_name}, version: {package_version}")
 
