@@ -2,7 +2,7 @@
 
 import sys
 import argparse
-from src.actions import install, add, init, execute_script, remove
+from src.actions import install, add, init, execute_script, remove, show
 from src.core import barn_action, Context
 
 def main():
@@ -37,9 +37,12 @@ ___/_.___/\__,_/_/  /_/ /_/
     remove_parser = subparsers.add_parser('remove')
     remove_parser.add_argument("package_name", help="The name of package to add, versioning is also supported")
 
+    show_parser = subparsers.add_parser('show')
+    show_parser.add_argument("-v", "--verbose", help="extra text", action='store_true')
+    show_parser.add_argument("package_name", help="The name of package to show")
+    show_parser.add_argument("-f", "--files", help="Show the full list of files", action='store_true')
 
     subparsers.add_parser('test')
-
 
     # Parse the arguments
  
@@ -54,14 +57,8 @@ ___/_.___/\__,_/_/  /_/ /_/
     # If no command is given, print help and exit
     elif args.command is None:
         install()
-
-    elif args.command == 'test':
-        @barn_action
-        def test_action(context: Context=None):
-            # Do whatever here
-            context.add_dependency_to_project_yaml("test", "1.0.0")
-        test_action()
-
+    elif args.command == 'show':
+        show(args.package_name, verbose=args.verbose, files=args.files)
     elif args.command == 'install':
         install()
     elif args.command == 'remove':
@@ -70,6 +67,12 @@ ___/_.___/\__,_/_/  /_/ /_/
         add(args.requirement)
     elif args.command == 'init':
         init()
+    elif args.command == 'test':
+        @barn_action
+        def test_action(context: Context=None):
+            # Do whatever here
+            context.add_dependency_to_project_yaml("test", "1.0.0")
+        test_action()
     else:
         print("Unknown command: " + args.command)
 

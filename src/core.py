@@ -97,7 +97,10 @@ class Context:
         for dependency in dependencies:
             package_name = list(dependency.keys())[0]
             version = dependency[package_name]
-            requirements.append(f"{package_name}{version}")
+            if version == "N/A":
+                requirements.append(package_name)
+            else:
+                requirements.append(f"{package_name}{version}")
         return requirements
 
     def freeze_lock(self):
@@ -118,12 +121,17 @@ class Context:
 
         return yaml_content
     
-    def add_dependency_to_project_yaml(self, package, version):
+    def add_dependency_to_project_yaml(self, package, version=None, is_url=False):
         yaml_content = self.get_project_config()
-        new_entry = {
-            package: version
-        }
-
+        if is_url:
+            new_entry = {
+                package: f"N/A"
+            }
+        else:
+            new_entry = {
+                package: version
+            }
+            
         if "dependencies" not in yaml_content:
             yaml_content["dependencies"] = []
 
