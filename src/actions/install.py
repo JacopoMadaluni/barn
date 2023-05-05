@@ -8,8 +8,8 @@ def install(context: Context=None):
         context.run_command_on_global("python -m venv python_modules")
 
     if not context.lock_file_exists:
-        context.install_from_project()
+        return context.install_from_project()
     else:
         print("Installing..")
         # context.run_command_in_context("pip install -r barn.lock")
-        context.install_from_project()
+        return context.install_from_project()

@@ -48,23 +48,20 @@ ___/_.___/\__,_/_/  /_/ /_/
  
     args, unknown_args = parser.parse_known_args()
 
+    exit_code = 0
     if len(unknown_args) > 0:
-        """
-        Script time
-        """
-        execute_script(unknown_args[0])
-
+        _, exit_code = execute_script(unknown_args[0])
     # If no command is given, print help and exit
     elif args.command is None:
-        install()
+        _, exit_code = install()
     elif args.command == 'show':
-        show(args.package_name, verbose=args.verbose, files=args.files)
+        _, exit_code = show(args.package_name, verbose=args.verbose, files=args.files)
     elif args.command == 'install':
-        install()
+        _, exit_code = install()
     elif args.command == 'remove':
-        remove(args.package_name)
+        _, exit_code = remove(args.package_name)
     elif args.command == 'add':
-        add(args.requirement)
+        _, exit_code = add(args.requirement)
     elif args.command == 'init':
         init()
     elif args.command == 'test':
@@ -75,6 +72,8 @@ ___/_.___/\__,_/_/  /_/ /_/
         test_action()
     else:
         print("Unknown command: " + args.command)
+
+    sys.exit(exit_code)
 
 # if __name__ == "__main__":
 #     main()
