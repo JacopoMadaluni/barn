@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="python-barn",
-    version="0.4.0",
+    version="0.5.0",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -14,6 +14,7 @@ setup(
     },
     install_requires=[
         # Add your package dependencies here, e.g. 'numpy>=1.14.0'
+        "PyYAML==6.0"
     ],
     author="Jacopo Madaluni",
     author_email="jacopo.madaluni@gmail.com",

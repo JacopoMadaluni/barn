@@ -111,8 +111,9 @@ class Context:
     def install_from_project(self):
         requirements = self.get_dependencies_from_project_yaml()
         requirements_command = ' '.join(requirements)
-        self.run_command_in_context(f"pip install {requirements_command}")
+        stdout, exit_code = self.run_command_in_context(f"pip install {requirements_command}")
         self.freeze_lock()
+        return stdout, exit_code
 
     def get_project_config(self):
         # Load the YAML file
@@ -200,7 +201,6 @@ def find_project_yaml():
             return current_dir / "project.yaml"
         current_dir = current_dir.parent
     
-    
     raise Exception("Barn could not find a project context to use. Are you in a project directory?")
 
 
@@ -214,6 +214,6 @@ def barn_action(action):
         is_initialized=is_initialized
     )
     def wrapper(*args, **kwargs):
-        action(*args, **kwargs, context=context)
+        return action(*args, **kwargs, context=context)
 
     return wrapper

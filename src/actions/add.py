@@ -30,3 +30,5 @@ def add(requirement: str, context: Context=None):
     else:
         print(f"Error installing {package_name}=={package_version}")
 
+    return stdout, exit_code
+
