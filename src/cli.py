@@ -42,7 +42,7 @@ ___/_.___/\__,_/_/  /_/ /_/
     show_parser.add_argument("package_name", help="The name of package to show")
     show_parser.add_argument("-f", "--files", help="Show the full list of files", action='store_true')
 
-    subparsers.add_parser('test')
+    # subparsers.add_parser('test')
 
     # Parse the arguments
  
