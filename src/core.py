@@ -22,6 +22,14 @@ class IndentedYamlDumper(yaml.Dumper):
     def increase_indent(self, flow=False, indentless=False):
         return super(IndentedYamlDumper, self).increase_indent(flow, False)
     
+def str_presenter(dumper, data):
+  if len(data.splitlines()) > 1:  # check for multiline string
+    return dumper.represent_scalar('tag:yaml.org,2002:str', data, style='|')
+  return dumper.represent_scalar('tag:yaml.org,2002:str', data)
+
+yaml.add_representer(str, str_presenter)
+# to use with safe_dump:
+yaml.representer.SafeRepresenter.add_representer(str, str_presenter)
 
 class Context:
     def __init__(self, root_dir: Path=None, is_initialized=False):
@@ -97,8 +105,8 @@ class Context:
         return stdout, exit_code
     
     def setup_bash_function_capabilities(self, name: str, command: str):
-        trailing_sc = ";" if command.strip()[-1] != ";" else ""
-        function_declaration = "function "+ name + " { " + command + trailing_sc + ' }'
+        trailing_sc = " " if command.strip()[-1] != ";" else ""
+        function_declaration = "function "+ name + "() { \n" + command + trailing_sc + '\n}'
         logger.debug(f"Setting up function: {function_declaration}")
         _, exit_code = self.__run_command(
             function_declaration
@@ -158,7 +166,7 @@ class Context:
         yaml_content = self.get_project_config()
         if is_url:
             new_entry = {
-                package: f"N/A"
+                package: "N/A"
             }
         else:
             new_entry = {
@@ -171,6 +179,7 @@ class Context:
         dependencies: list[any] = yaml_content["dependencies"]
         if new_entry not in dependencies:
             yaml_content["dependencies"].append(new_entry)
+            logger.debug(yaml_content)
             with open(self.project_yaml_path, 'w') as yaml_file:
                 yaml.dump(yaml_content, yaml_file, Dumper=IndentedYamlDumper, default_flow_style=False, indent=2, sort_keys=False)
 
@@ -184,8 +193,7 @@ class Context:
                 break
         
         yaml_content["dependencies"] = dependencies
-        
-            
+
         with open(self.project_yaml_path, 'w') as yaml_file:
             yaml.dump(yaml_content, yaml_file, Dumper=IndentedYamlDumper, default_flow_style=False, indent=2, sort_keys=False)
 
