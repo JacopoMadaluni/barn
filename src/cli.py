@@ -52,7 +52,7 @@ ___/_.___/\__,_/_/  /_/ /_/
     args, unknown_args = parser.parse_known_args()
 
     exit_code = 0
-    if len(unknown_args) and args.command is None > 0:
+    if len(unknown_args) > 0 and args.command is None:
         _, exit_code = execute_script(unknown_args[0], unknown_args[1:])
     # If no command is given, print help and exit
     elif args.command is None:
