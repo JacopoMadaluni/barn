@@ -32,8 +32,11 @@ ___/_.___/\__,_/_/  /_/ /_/
 
     # Add 'add' command
     add_parser = subparsers.add_parser('add')
-    add_parser.add_argument("requirement", help="The name of package to add, versioning is also supported")
-    
+    add_parser.add_argument(
+        "requirement",
+        help="The name of package to add, versioning is also supported"
+    )
+
     remove_parser = subparsers.add_parser('remove')
     remove_parser.add_argument("package_name", help="The name of package to add, versioning is also supported")
 
@@ -49,8 +52,8 @@ ___/_.___/\__,_/_/  /_/ /_/
     args, unknown_args = parser.parse_known_args()
 
     exit_code = 0
-    if len(unknown_args) > 0:
-        _, exit_code = execute_script(unknown_args[0])
+    if len(unknown_args) and args.command is None > 0:
+        _, exit_code = execute_script(unknown_args[0], unknown_args[1:])
     # If no command is given, print help and exit
     elif args.command is None:
         _, exit_code = install()
@@ -74,6 +77,3 @@ ___/_.___/\__,_/_/  /_/ /_/
         print("Unknown command: " + args.command)
 
     sys.exit(exit_code)
-
-# if __name__ == "__main__":
-#     main()

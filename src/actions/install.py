@@ -1,8 +1,8 @@
-import subprocess
+from logging import Logger
 from src.core import barn_action, Context
 
 @barn_action
-def install(context: Context=None):
+def install(context: Context=None, logger: Logger=None):
     if not context.is_initialized:
         print("Initializing python_modules")
         context.run_command_on_global("python -m venv python_modules")
