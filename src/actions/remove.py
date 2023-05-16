@@ -1,8 +1,9 @@
+from logging import Logger
 from src.core import barn_action, Context
 
 
 @barn_action
-def remove(package_name, context: Context=None):
+def remove(package_name, context: Context=None, logger: Logger=None):
 
     stdout, exit_code = context.run_command_in_context(f"pip uninstall -y {package_name}")
 

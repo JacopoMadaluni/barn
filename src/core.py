@@ -4,8 +4,19 @@ import subprocess
 import yaml
 import pty
 import re
+import logging
 from typing import List, Dict
+from .logging_utils import CustomFormatter
 
+logger = logging.getLogger()
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+ch.setFormatter(CustomFormatter())
+logger.addHandler(ch)
+if int(os.environ.get('BARN_DEBUG', 0)) == 1:
+    logger.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.WARNING)
 
 class IndentedYamlDumper(yaml.Dumper):
     def increase_indent(self, flow=False, indentless=False):
@@ -24,6 +35,10 @@ class Context:
 
         self.project_yaml_path = self.root_dir / "project.yaml"
 
+        self.bash_functions_declarations = {
+
+        }
+
 
 
     def __repr__(self) -> str:
@@ -35,6 +50,7 @@ class Context:
         return repr
 
     def __run_command(self, command, mute=False):
+        logger.debug(f"Executing: {command}")
         master_fd, slave_fd = pty.openpty()
         process = subprocess.Popen(
             command,
@@ -80,6 +96,22 @@ class Context:
 
         return stdout, exit_code
     
+    def setup_bash_function_capabilities(self, name: str, command: str):
+        trailing_sc = ";" if command.strip()[-1] != ";" else ""
+        function_declaration = "function "+ name + " { " + command + trailing_sc + ' }'
+        logger.debug(f"Setting up function: {function_declaration}")
+        _, exit_code = self.__run_command(
+            function_declaration
+        )
+        if exit_code == 0:
+            self.bash_functions_declarations[name] = function_declaration
+        return exit_code
+    
+    def run_function_in_context(self, name: str, args: str):
+        declaration = self.bash_functions_declarations[name]
+        script_to_execute = f"{declaration} && {name} {args}"
+        return self.run_command_in_context(script_to_execute)
+
     def run_command_on_global(self, command: str):
         stdout, exit_code = self.__run_command(
             f'{command}'
@@ -205,6 +237,7 @@ def find_project_yaml():
 
 
 
+
 def barn_action(action):
     project_yaml = find_project_yaml()
     root_dir = project_yaml.parent
@@ -214,6 +247,6 @@ def barn_action(action):
         is_initialized=is_initialized
     )
     def wrapper(*args, **kwargs):
-        return action(*args, **kwargs, context=context)
+        return action(*args, **kwargs, context=context, logger=logger)
 
     return wrapper

@@ -1,3 +1,4 @@
+from logging import Logger
 from src.core import barn_action, Context
 
 def add_from_url(url: str, context: Context):
@@ -9,7 +10,7 @@ def add_from_url(url: str, context: Context):
         print(f"Error installing {url}")
 
 @barn_action
-def add(requirement: str, context: Context=None):
+def add(requirement: str, context: Context=None, logger: Logger=None):
 
     if requirement.startswith("git+https://") or requirement.startswith("git+ssh://"):
         add_from_url(requirement, context)

@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="python-barn",
-    version="0.5.1",
+    version="0.6.0",
     packages=find_packages(),
     entry_points={
         "console_scripts": [
@@ -19,7 +19,7 @@ setup(
     author="Jacopo Madaluni",
     author_email="jacopo.madaluni@gmail.com",
     description="A wrapper for pip, to give better utils to python projects dependency management",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/JacopoMadaluni/barn",
     classifiers=[
