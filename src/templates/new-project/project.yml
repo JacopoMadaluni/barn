@@ -3,7 +3,7 @@ description: $DESCRIPTION
 version: 0.1.0
 scripts:
   - start: "python ./main.py"
-  - test: "..."
+  - test: "echo Not implemented"
 author: $AUTHOR
 license: $LICENSE
 dependencies:

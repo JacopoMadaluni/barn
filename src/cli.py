@@ -2,8 +2,6 @@
 
 import sys
 import argparse
-from src.actions import install, add, init, execute_script, remove, show
-from src.core import barn_action, Context
 
 def main():
 
@@ -26,6 +24,8 @@ ___/_.___/\__,_/_/  /_/ /_/
 
     parser = IgnoreUnknownArgParser(description='Barn CLI tool', add_help=False)
     subparsers = parser.add_subparsers(dest='command')
+
+    add_parser = subparsers.add_parser('init')
 
     # Add 'install' command
     subparsers.add_parser('install')
@@ -52,10 +52,17 @@ ___/_.___/\__,_/_/  /_/ /_/
     args, unknown_args = parser.parse_known_args()
 
     exit_code = 0
+
+    if args.command == 'init':
+        from src.actions import init
+        return init()
+
+    from src.actions import install, add, execute_script, remove, show
     if len(unknown_args) > 0 and args.command is None:
         _, exit_code = execute_script(unknown_args[0], unknown_args[1:])
     # If no command is given, print help and exit
     elif args.command is None:
+        print(install)
         _, exit_code = install()
     elif args.command == 'show':
         _, exit_code = show(args.package_name, verbose=args.verbose, files=args.files)
@@ -65,9 +72,8 @@ ___/_.___/\__,_/_/  /_/ /_/
         _, exit_code = remove(args.package_name)
     elif args.command == 'add':
         _, exit_code = add(args.requirement)
-    elif args.command == 'init':
-        init()
     elif args.command == 'test':
+        from src.core import barn_action, Context
         @barn_action
         def test_action(context: Context=None):
             # Do whatever here
