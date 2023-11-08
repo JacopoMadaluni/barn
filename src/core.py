@@ -234,15 +234,15 @@ def is_env_initialized(base_dir: Path):
     )
 
 
-def find_project_yaml():
+def find_project_yaml(init=False):
     current_dir = Path.cwd()
     while current_dir != Path(current_dir.root):
         if is_barn_project(current_dir):
             return current_dir / "project.yaml"
         current_dir = current_dir.parent
-    
-    raise Exception("Barn could not find a project context to use. Are you in a project directory?")
-
+    if not init:
+        raise Exception("Barn could not find a project context to use. Are you in a project directory?")
+    return None
 
 
 
