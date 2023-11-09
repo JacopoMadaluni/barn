@@ -13,10 +13,10 @@ ___ / /_/ / /_/ / /  / / / /
 ___/_.___/\__,_/_/  /_/ /_/
     """
     print(title)
-    version = '.'.join(map(str, sys.version_info[:3]))
-    if not version.startswith("3.9"):
-        print("Barn requires Python 3.9 or higher")
-        sys.exit(1)
+    # version = '.'.join(map(str, sys.version_info[:3]))
+    # # if not version.startswith("3.9"):
+    # #     print("Barn requires Python 3.9 or higher")
+    # #     sys.exit(1)
 
     class IgnoreUnknownArgParser(argparse.ArgumentParser):
         def error(self, message):
