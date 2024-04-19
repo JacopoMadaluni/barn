@@ -150,7 +150,11 @@ class Context:
 
     def install_from_project(self):
         requirements = self.get_dependencies_from_project_yaml()
-        requirements_command = ' '.join(requirements)
+        special_indexes = [r for r in requirements if r.find("--index-url") != -1]
+        normal_requirements = [r for r in requirements if r.find("--index-url") == -1]
+        for command in special_indexes:
+            stdout, exit_code = self.run_command_in_context(f"pip install {command}")
+        requirements_command = ' '.join(normal_requirements)
         stdout, exit_code = self.run_command_in_context(f"pip install {requirements_command}")
         self.freeze_lock()
         return stdout, exit_code
